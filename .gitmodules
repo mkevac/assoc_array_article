@@ -1,0 +1,12 @@
+[submodule "thirdparty/src/sparsehash"]
+	path = thirdparty/src/sparsehash
+	url = git@github.com:sparsehash/sparsehash.git
+[submodule "thirdparty/src/sparsepp"]
+	path = thirdparty/src/sparsepp
+	url = git@github.com:greg7mdp/sparsepp.git
+[submodule "thirdparty/src/t1ha"]
+	path = thirdparty/src/t1ha
+	url = git@github.com:leo-yuriev/t1ha.git
+[submodule "thirdparty/src/xxHash"]
+	path = thirdparty/src/xxHash
+	url = git@github.com:Cyan4973/xxHash.git
