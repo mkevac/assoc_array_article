@@ -4,31 +4,38 @@ LDFLAGS=
 
 all: hash_judy_test hash_judy_test_jemalloc
 
-hash_judy_test: hash_judy_test.cpp thirdparty/opt/judy/lib/libJudy.a thirdparty/opt/sparsehash/include/sparsehash/sparse_hash_map
+hash_judy_test: hash_judy_test.cpp thirdparty/opt/judy/lib/libJudy.a thirdparty/opt/sparsehash/include/sparsehash/sparse_hash_map thirdparty/src/t1ha/libt1ha.a
 	$(CXX) $(CFLAGS) \
 		-I . \
 		-I thirdparty/opt/judy/include \
 		-I thirdparty/src/sparsepp \
 		-I thirdparty/src/xxHash \
+		-I thirdparty/src/t1ha \
 		-I thirdparty/opt/sparsehash/include \
 		-o hash_judy_test \
 		hash_judy_test.cpp \
 		thirdparty/opt/judy/lib/libJudy.a \
+		thirdparty/src/t1ha/libt1ha.a \
 		thirdparty/src/xxHash/xxhash.c
 
-hash_judy_test_jemalloc: hash_judy_test.cpp thirdparty/opt/judy/lib/libJudy.a thirdparty/opt/sparsehash/include/sparsehash/sparse_hash_map thirdparty/opt/jemalloc/lib/libjemalloc.a
+hash_judy_test_jemalloc: hash_judy_test.cpp thirdparty/opt/judy/lib/libJudy.a thirdparty/opt/sparsehash/include/sparsehash/sparse_hash_map thirdparty/opt/jemalloc/lib/libjemalloc.a thirdparty/src/t1ha/libt1ha.a
 	$(CXX) $(CFLAGS) \
 		-I . \
 		-I thirdparty/opt/judy/include \
 		-I thirdparty/src/sparsepp \
 		-I thirdparty/src/xxHash \
+		-I thirdparty/src/t1ha \
 		-I thirdparty/opt/sparsehash/include \
 		-o hash_judy_test_jemalloc \
 		-pthread \
 		hash_judy_test.cpp \
 		thirdparty/opt/judy/lib/libJudy.a \
+		thirdparty/src/t1ha/libt1ha.a \
 		thirdparty/opt/jemalloc/lib/libjemalloc.a \
 		thirdparty/src/xxHash/xxhash.c
+
+thirdparty/src/t1ha/libt1ha.a:
+	cd thirdparty/src/t1ha && make
 
 thirdparty/opt/judy/lib/libJudy.a: thirdparty/src/judy-1.0.5
 	cd thirdparty/src/judy-1.0.5 &&	./configure --prefix=${CURDIR}/thirdparty/opt/judy && make -j8 && make install

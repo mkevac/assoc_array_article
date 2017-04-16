@@ -10,12 +10,19 @@
 
 #include <Judy.h>
 #include <xxhash.h>
+#include <t1ha.h>
 
 using std::make_pair;
 
 struct xxhash {
 	size_t operator()(uint64_t str) const {
 		return XXH64(&str, sizeof(uint64_t), 2001);
+	}
+};
+
+struct t1hash {
+	size_t operator()(uint64_t str) const {
+		return t1ha(&str, sizeof(uint64_t), 2001);
 	}
 };
 
@@ -132,20 +139,32 @@ void test_judy(int count)
 
 int main(int argc, char const *argv[])
 {
-	if (argc < 3)
+	if (argc < 4)
 	{
-		printf("usage: %s <judy|spp|dense|sparse|std> <n_iterations>\n", argv[0]);
+		printf("usage: %s <judy|spp|dense|sparse|std> <std|xxhash|t1ha> <n_iterations>\n", argv[0]);
 		return 1;
 	}
 
 	char const *test_type = argv[1];
-	int const n_iterations = atoi(argv[2]);
+	char const *hash_fn_type = argv[2];
+	int const n_iterations = atoi(argv[3]);
 
 	if (strcmp(test_type, "spp") == 0)
 	{
 		printf("Testing spp::sparse_hash_map (%d iterations)\n", n_iterations);
-		spp::sparse_hash_map<uint32_t, void*, std::hash<uint32_t>> s;
-		test(s, n_iterations);
+		if (strcmp(hash_fn_type, "std") == 0) {
+			spp::sparse_hash_map<uint32_t, void*, std::hash<uint32_t>> s;
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "xxhash") == 0) {
+			spp::sparse_hash_map<uint32_t, void*, xxhash> s;
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "t1ha") == 0) {
+			spp::sparse_hash_map<uint32_t, void*, t1hash> s;
+			test(s, n_iterations);
+		} else {
+			printf ("Unsupported hash function.\n");
+			return 1;
+		}
 		printf("\n\n");
 
 		return 0;
@@ -154,10 +173,22 @@ int main(int argc, char const *argv[])
 	if (strcmp(test_type, "sparse") == 0)
 	{
 		printf ("Testing google::sparse_hash_map (%d iterations)\n", n_iterations);
-		google::sparse_hash_map<uint32_t, void*, std::hash<uint32_t>> s;
-		// s.set_empty_key(-INT_MAX);
-		s.set_deleted_key(-(INT_MAX - 1));
-		test(s, n_iterations);
+		if (strcmp(hash_fn_type, "std") == 0) {
+			google::sparse_hash_map<uint32_t, void*, std::hash<uint32_t>> s;
+			s.set_deleted_key(-(INT_MAX - 1));
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "xxhash") == 0) {
+			google::sparse_hash_map<uint32_t, void*, xxhash> s;
+			s.set_deleted_key(-(INT_MAX - 1));
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "t1ha") == 0) {
+			google::sparse_hash_map<uint32_t, void*, t1hash> s;
+			s.set_deleted_key(-(INT_MAX - 1));
+			test(s, n_iterations);
+		} else {
+			printf ("Unsupported hash function.\n");
+			return 1;
+		}
 		printf ("\n\n");
 		return 0;
 	}
@@ -165,10 +196,25 @@ int main(int argc, char const *argv[])
 	if (strcmp(test_type, "dense") == 0)
 	{
 		printf ("Testing google::dense_hash_map (%d iterations)\n", n_iterations);
-		google::dense_hash_map<uint32_t, void*, std::hash<uint32_t>> s;
-		s.set_empty_key(-INT_MAX);
-		s.set_deleted_key(-(INT_MAX - 1));
-		test(s, n_iterations);
+		if (strcmp(hash_fn_type, "std") == 0) {
+			google::dense_hash_map<uint32_t, void*, std::hash<uint32_t>> s;
+			s.set_empty_key(-INT_MAX);
+			s.set_deleted_key(-(INT_MAX - 1));
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "xxhash") == 0) {
+			google::dense_hash_map<uint32_t, void*, xxhash> s;
+			s.set_empty_key(-INT_MAX);
+			s.set_deleted_key(-(INT_MAX - 1));
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "t1ha") == 0) {
+			google::dense_hash_map<uint32_t, void*, t1hash> s;
+			s.set_empty_key(-INT_MAX);
+			s.set_deleted_key(-(INT_MAX - 1));
+			test(s, n_iterations);
+		} else {
+			printf ("Unsupported hash function.\n");
+			return 1;
+		}
 		printf ("\n\n");
 		return 0;
 	}
@@ -176,8 +222,19 @@ int main(int argc, char const *argv[])
 	if (strcmp(test_type, "std") == 0)
 	{
 		printf ("Testing std::unordered_map (%d iterations)\n", n_iterations);
-		std::unordered_map<uint32_t, void*, std::hash<uint32_t>> s;
-		test(s, n_iterations);
+		if (strcmp(hash_fn_type, "std") == 0) {
+			std::unordered_map<uint32_t, void*, std::hash<uint32_t>> s;
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "xxhash") == 0) {
+			std::unordered_map<uint32_t, void*, xxhash> s;
+			test(s, n_iterations);
+		} else if (strcmp(hash_fn_type, "t1ha") == 0) {
+			std::unordered_map<uint32_t, void*, t1hash> s;
+			test(s, n_iterations);
+		} else {
+			printf ("Unsupported hash function.\n");
+			return 1;
+		}
 		printf ("\n\n");
 		return 0;
 	}
