@@ -38,7 +38,7 @@ thirdparty/src/t1ha/libt1ha.a:
 	cd thirdparty/src/t1ha && make
 
 thirdparty/opt/judy/lib/libJudy.a: thirdparty/src/judy-1.0.5
-	cd thirdparty/src/judy-1.0.5 &&	./configure --prefix=${CURDIR}/thirdparty/opt/judy && make -j8 && make install
+	cd thirdparty/src/judy-1.0.5 &&	./configure --prefix=${CURDIR}/thirdparty/opt/judy && make && make install
 
 thirdparty/src/judy-1.0.5: thirdparty/src/Judy-1.0.5.tar.gz
 	cd thirdparty/src && tar xf Judy-1.0.5.tar.gz
