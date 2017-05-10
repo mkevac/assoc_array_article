@@ -10,7 +10,7 @@
 
     __DATA__
 
-    function plot_chart(chart_container, chart_data_set) {
+    function plot_chart(chart_container, chart_data_set, yaxissuffix) {
 	    $.plot($(chart_container), [ chart_data_set ], {
 		    series: {
 			    bars: {
@@ -22,17 +22,22 @@
 		    xaxis: {
 			    mode: "categories",
 			    tickLength: 0
+		    },
+		    yaxis: {
+			    tickFormatter: function (v) {
+				    return v + " " + yaxissuffix;
+			    }
 		    }
 	    });
     }
 
     $(document).ready(function () {
 
-	    plot_chart("#speed", chart_data["speed"]);
-	    plot_chart("#memory", chart_data["memory"]);
-	    plot_chart("#hash_functions", chart_data["hash_functions"]);
-	    plot_chart("#jemalloc", chart_data["jemalloc"]);
-	    plot_chart("#jemalloc_memory", chart_data["jemalloc_memory"]);
+	    plot_chart("#speed", chart_data["speed"], "s");
+	    plot_chart("#memory", chart_data["memory"], "KiB");
+	    plot_chart("#hash_functions", chart_data["hash_functions"], "s");
+	    plot_chart("#jemalloc", chart_data["jemalloc"], "KiB");
+	    plot_chart("#jemalloc_memory", chart_data["jemalloc_memory"], "KiB");
 
     });
     
@@ -50,19 +55,19 @@
 
 <div class="global">
 
-<h3>Speed</h3>
+<h3>Speed (less is better)</h3>
 <div class="chart" id="speed"></div>
 
-<h3>Memory</h3>
+<h3>Memory (less is better)</h3>
 <div class="chart" id="memory"></div>
 
-<h3>Hash Functions</h3>
+<h3>Hash Functions (less is better)</h3>
 <div class="chart" id="hash_functions"></div>
 
-<h3>Jemalloc</h3>
+<h3>Jemalloc (less is better)</h3>
 <div class="chart" id="jemalloc"></div>
 
-<h3>Jemalloc Memory</h3>
+<h3>Jemalloc Memory (less is better)</h3>
 <div class="chart" id="jemalloc_memory"></div>
 
 </div>

@@ -10,7 +10,7 @@
 
     chart_data = {"jemalloc_memory": [["dense jemalloc", 1055300], ["dense std", 788456], ["judy jemalloc", 268840], ["judy std", 222212], ["sparse jemalloc", 258784], ["sparse std", 176200], ["spp jemalloc", 303780], ["spp std", 231144], ["std jemalloc", 500436], ["std std", 487544]], "hash_functions": [["dense std", 0.38], ["dense t1ha", 0.59], ["dense xxhash", 0.65], ["judy std", 1.66], ["sparse std", 1.8], ["sparse t1ha", 1.88], ["sparse xxhash", 1.91], ["spp std", 1.0], ["spp t1ha", 1.29], ["spp xxhash", 1.22], ["std std", 1.16], ["std t1ha", 1.31], ["std xxhash", 1.32]], "jemalloc": [["dense jemalloc", 0.38], ["dense std", 0.38], ["judy jemalloc", 1.43], ["judy std", 1.66], ["sparse jemalloc", 1.77], ["sparse std", 1.8], ["spp jemalloc", 0.93], ["spp std", 1.0], ["std jemalloc", 1.26], ["std std", 1.16]], "speed": [["dense", 0.38], ["judy", 1.66], ["sparse", 1.8], ["spp", 1.0], ["std", 1.16]], "memory": [["dense", 788456], ["judy", 222212], ["sparse", 176200], ["spp", 231144], ["std", 487544]]}
 
-    function plot_chart(chart_container, chart_data_set) {
+    function plot_chart(chart_container, chart_data_set, yaxissuffix) {
 	    $.plot($(chart_container), [ chart_data_set ], {
 		    series: {
 			    bars: {
@@ -22,17 +22,22 @@
 		    xaxis: {
 			    mode: "categories",
 			    tickLength: 0
+		    },
+		    yaxis: {
+			    tickFormatter: function (v) {
+				    return v + " " + yaxissuffix;
+			    }
 		    }
 	    });
     }
 
     $(document).ready(function () {
 
-	    plot_chart("#speed", chart_data["speed"]);
-	    plot_chart("#memory", chart_data["memory"]);
-	    plot_chart("#hash_functions", chart_data["hash_functions"]);
-	    plot_chart("#jemalloc", chart_data["jemalloc"]);
-	    plot_chart("#jemalloc_memory", chart_data["jemalloc_memory"]);
+	    plot_chart("#speed", chart_data["speed"], "s");
+	    plot_chart("#memory", chart_data["memory"], "KiB");
+	    plot_chart("#hash_functions", chart_data["hash_functions"], "s");
+	    plot_chart("#jemalloc", chart_data["jemalloc"], "KiB");
+	    plot_chart("#jemalloc_memory", chart_data["jemalloc_memory"], "KiB");
 
     });
     
@@ -50,19 +55,19 @@
 
 <div class="global">
 
-<h3>Speed</h3>
+<h3>Speed (less is better)</h3>
 <div class="chart" id="speed"></div>
 
-<h3>Memory</h3>
+<h3>Memory (less is better)</h3>
 <div class="chart" id="memory"></div>
 
-<h3>Hash Functions</h3>
+<h3>Hash Functions (less is better)</h3>
 <div class="chart" id="hash_functions"></div>
 
-<h3>Jemalloc</h3>
+<h3>Jemalloc (less is better)</h3>
 <div class="chart" id="jemalloc"></div>
 
-<h3>Jemalloc Memory</h3>
+<h3>Jemalloc Memory (less is better)</h3>
 <div class="chart" id="jemalloc_memory"></div>
 
 </div>
